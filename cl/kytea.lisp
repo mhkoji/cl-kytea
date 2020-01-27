@@ -24,13 +24,13 @@
                   (cl-kytea.wrap:calculate-ws (kytea-wrap kytea) s))))
     (unwind-protect
          (loop for i from 0
-               for word-ptr = (cffi:mem-aref result :pointer i)
-               while (not (cffi:null-pointer-p word-ptr))
-               collect (cffi:foreign-string-to-lisp word-ptr))
+               for word-surface-ptr = (cffi:mem-aref result :pointer i)
+               while (not (cffi:null-pointer-p word-surface-ptr))
+               collect (cffi:foreign-string-to-lisp word-surface-ptr))
       (loop for i from 0
-            for word-ptr = (cffi:mem-aref result :pointer i)
-            while (not (cffi:null-pointer-p word-ptr))
-            do (cffi:foreign-free word-ptr))
+            for word-surface-ptr = (cffi:mem-aref result :pointer i)
+            while (not (cffi:null-pointer-p word-surface-ptr))
+            do (cffi:foreign-free word-surface-ptr))
       (cffi:foreign-free result))))
 
 

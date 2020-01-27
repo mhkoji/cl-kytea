@@ -40,7 +40,7 @@ char** kytea_wrap_calculateWS(kytea::Kytea *kytea, char *sentence) {
 
   const kytea::KyteaSentence::Words &words = kytea_sent.words;
 
-  char** result = (char**)malloc(sizeof(char*) * (words.size() + 1));
+  char **result = (char**)malloc(sizeof(char*) * (words.size() + 1));
   for (size_t i = 0; i < words.size(); i++) {
     result[i] = strdup(util->showString(words[i].surface).c_str());
   }

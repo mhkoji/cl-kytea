@@ -31,7 +31,7 @@
             for word-surface-ptr = (cffi:mem-aref result :pointer i)
             while (not (cffi:null-pointer-p word-surface-ptr))
             do (cffi:foreign-free word-surface-ptr))
-      (cffi:foreign-free result))))
+      (cffi:foreign-array-free result))))
 
 
 (defun calculate-tags-collect-words (result)
@@ -65,7 +65,7 @@
 
 (defun calculate-tags-destory-result (result)
   ;; TODO
-  (cffi:foreign-free result))
+  (cffi:foreign-array-free result))
 
 (defun calculate-tags (kytea string)
   (let ((result (cffi:with-foreign-string (s string)

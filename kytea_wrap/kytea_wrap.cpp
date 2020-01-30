@@ -31,6 +31,11 @@ kytea::Kytea* kytea_wrap_new() {
   return kytea;
 }
 
+void kytea_wrap_destory(kytea::Kytea* kytea) {
+  delete kytea;
+}
+
+
 char** kytea_wrap_calculateWS(kytea::Kytea *kytea, char *sentence) {
   kytea::StringUtil *util = kytea->getStringUtil();
 
@@ -48,6 +53,14 @@ char** kytea_wrap_calculateWS(kytea::Kytea *kytea, char *sentence) {
 
   return result;
 }
+
+void kytea_wrap_calculateWS_destory(char** result) {
+  for (size_t i = 0; result[i] != NULL; i++) {
+    free(result[i]);
+  }
+  free(result);
+}
+
 
 struct word* kytea_wrap_calculateTags(kytea::Kytea *kytea, char *sentence) {
   kytea::StringUtil *util = kytea->getStringUtil();
@@ -87,6 +100,21 @@ struct word* kytea_wrap_calculateTags(kytea::Kytea *kytea, char *sentence) {
     }
   }
   return result;
+}
+
+void kytea_wrap_calculateTags_destroy(struct word *result) {
+  for (size_t i = 0; result[i].surface != NULL; i++) {
+    free(result[i].surface);
+
+    for (size_t j = 0; result[i].tags[j] != NULL; j++) {
+      for (size_t k = 0; result[i].tags[j][k].name != NULL; k++) {
+        free(result[i].tags[j][k].name);
+      }
+      free(result[i].tags[j]);
+    }
+    free(result[i].tags);
+  }
+  free(result);
 }
 
 #ifdef __cplusplus

@@ -16,22 +16,21 @@
   (make-instance 'kytea :wrap (cl-kytea.wrap:new)))
 
 (defun destroy-kytea (kytea)
-  (cffi:foreign-free (kytea-wrap kytea))
+  (cl-kytea.wrap:destroy (kytea-wrap kytea))
   (setf (kytea-wrap kytea) (cffi:null-pointer)))
+
+
+(defun calculate-ws-collect-word-surfaces (result)
+  (loop for i from 0
+        for word-surface-ptr = (cffi:mem-aref result :pointer i)
+        while (not (cffi:null-pointer-p word-surface-ptr))
+        collect (cffi:foreign-string-to-lisp word-surface-ptr)))
 
 (defun calculate-ws (kytea string)
   (let ((result (cffi:with-foreign-string (s string)
                   (cl-kytea.wrap:calculate-ws (kytea-wrap kytea) s))))
-    (unwind-protect
-         (loop for i from 0
-               for word-surface-ptr = (cffi:mem-aref result :pointer i)
-               while (not (cffi:null-pointer-p word-surface-ptr))
-               collect (cffi:foreign-string-to-lisp word-surface-ptr))
-      (loop for i from 0
-            for word-surface-ptr = (cffi:mem-aref result :pointer i)
-            while (not (cffi:null-pointer-p word-surface-ptr))
-            do (cffi:foreign-free word-surface-ptr))
-      (cffi:foreign-array-free result))))
+    (unwind-protect (calculate-ws-collect-word-surfaces result)
+      (cl-kytea.wrap:calculate-ws-destroy result))))
 
 
 (defun calculate-tags-collect-words (result)
@@ -63,12 +62,8 @@
                          collect possible-tags)
         collect (list surface tags)))
 
-(defun calculate-tags-destory-result (result)
-  ;; TODO
-  (cffi:foreign-array-free result))
-
 (defun calculate-tags (kytea string)
   (let ((result (cffi:with-foreign-string (s string)
                   (cl-kytea.wrap:calculate-tags (kytea-wrap kytea) s))))
     (unwind-protect (calculate-tags-collect-words result)
-      (calculate-tags-destory-result result))))
+      (cl-kytea.wrap:calculate-tags-destroy result))))

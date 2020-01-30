@@ -23,9 +23,8 @@
 
 (defun calculate-ws-collect-word-surfaces (result)
   (loop for i from 0
-        for word-surface-ptr = (cffi:mem-aref result :pointer i)
-        while (not (cffi:null-pointer-p word-surface-ptr))
-        collect (cffi:foreign-string-to-lisp word-surface-ptr)))
+        for surface = (cffi:mem-aref result :string i)
+        while surface collect surface))
 
 (defun calculate-ws (kytea string)
   (let ((result (cffi:with-foreign-string (s string)

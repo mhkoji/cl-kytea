@@ -4,7 +4,8 @@
            :load-kytea
            :destroy-kytea
            :calculate-ws
-           :calculate-tags))
+           :calculate-tags
+           :calculate-1st-tags))
 (in-package :cl-kytea)
 
 (defclass kytea ()
@@ -67,3 +68,7 @@
                   (cl-kytea.wrap:calculate-tags (kytea-wrap kytea) s))))
     (unwind-protect (calculate-tags-collect-words result)
       (cl-kytea.wrap:calculate-tags-destroy result))))
+
+(defun calculate-1st-tags (kytea string)
+  (loop for (surface tags) in (calculate-tags kytea string)
+        collect (cons surface (mapcar #'caar tags))))

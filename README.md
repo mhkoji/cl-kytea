@@ -18,7 +18,7 @@ Add paths to `LD_LIBRARY_PATH`.
 
 ```
 export LD_LIBRARY_PATH="<path/to/kytea/lib":$LD_LIBRARY_PATH
-export LD_LIBRARY_PATH="<path/to/cl-kytea>/kytea-wrap":$LD_LIBRARY_PATH
+export LD_LIBRARY_PATH="<path/to/cl-kytea>/kytea_wrap":$LD_LIBRARY_PATH
 ```
 
 Then, you can load `cl-kytea`.

@@ -13,8 +13,20 @@
     :initarg :wrap
     :accessor kytea-wrap)))
 
-(defun load-kytea ()
-  (make-instance 'kytea :wrap (cl-kytea.wrap:new)))
+(defun load-wrap (args)
+  (assert (every #'stringp args))
+  (let ((argc (length args))
+	(argv (cffi:foreign-alloc :string
+				  :initial-contents args
+				  :null-terminated-p t)))
+    (unwind-protect (cl-kytea.wrap:new argc argv)
+      (dotimes (i argc)
+	(cffi:foreign-free (cffi:mem-aref argv :pointer i)))
+      (cffi:foreign-free argv))))
+
+(defun load-kytea (&rest args)
+  (let ((wrap (load-wrap args)))
+    (make-instance 'kytea :wrap wrap)))
 
 (defun destroy-kytea (kytea)
   (cl-kytea.wrap:destroy (kytea-wrap kytea))

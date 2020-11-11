@@ -33,7 +33,9 @@
   (word-surface :string)
   (word-tags    (:pointer (:pointer (:struct tag)))))
 
-(cffi:defcfun ("kytea_wrap_new" new) :pointer)
+(cffi:defcfun ("kytea_wrap_new" new) :pointer
+  (argc :int)
+  (argv :pointer))
 
 (cffi:defcfun ("kytea_wrap_destory" destroy) :void
   (wrap :pointer))

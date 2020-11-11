@@ -5,6 +5,8 @@
 #include <cstring>
 #include <cstdlib>
 
+#include <iostream>
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -22,13 +24,18 @@ struct word {
 };
 
 
-kytea::Kytea* kytea_wrap_new() {
-  kytea::KyteaConfig *config = new kytea::KyteaConfig();
-  config->setOnTraining(false);
+kytea::Kytea* kytea_wrap_new(int argc, const char** argv) {
+  try {
+    kytea::KyteaConfig *config = new kytea::KyteaConfig();
+    config->setOnTraining(false);
+    config->parseRunCommandLine(argc, argv);
 
-  kytea::Kytea *kytea = new kytea::Kytea(config);
-  kytea->readModel(config->getModelFile().c_str());
-  return kytea;
+    kytea::Kytea *kytea = new kytea::Kytea(config);
+    kytea->readModel(config->getModelFile().c_str());
+    return kytea;
+  } catch (...) {
+    return nullptr;
+  }
 }
 
 void kytea_wrap_destory(kytea::Kytea* kytea) {
